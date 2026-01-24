@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body style="background-color: #212121;">
+    XMLHttpRequest (XHR) objects are used to interact with servers. You can retrieve data from a URL without having to do a full page refresh. This enables a Web page to update just part of a page without disrupting what the user is doing.
+</body>
+<script>
+    const xhr = new XMLHttpRequest()
+    const requestURL = 'https://api.github.com/users/vaibhav-the-aspirant'
+    xhr.open('GET', requestURL)
+    xhr.onreadystatechange = function(){
+        console.log(xhr.readyState);
+        if (xhr.readyState === 4) {
+            const data = JSON.parse(this.responseText)
+            console.log(data.public_repos);
+            console.log(data.avatar_url);
+        }
+    }
+    xhr.send()
+</script>
+</html> 
