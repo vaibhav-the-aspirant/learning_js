@@ -81,6 +81,7 @@ function hasUnsufficientLength(str){
 
 
 //email ke declarations
+
 const email = document.querySelector('#email')
 const emailAnnotation = document.querySelector('#emailAnnotation')
 const emailDot= document.querySelector('#emailDot')
@@ -122,6 +123,7 @@ email.addEventListener('input',(e)=>{
     }
 })
 
+
 //email vaildations ke liye functions
 function hasAnnotation(str){
     return str.includes('@')
@@ -137,5 +139,153 @@ function hasCorrectOrder(str){
 }
 
 
-//-----------------------------------------------------------------
 
+//-------------------------------------------------------------------
+
+
+const strengthMessage = document.querySelector('#result')
+const formBody = document.querySelector('.form')
+const rulesContainer = document.querySelector('#rules');
+const pass = document.querySelector('#password')
+let key ='';
+
+pass.addEventListener('input', (e)=>{
+    rulesContainer.innerHTML = "";
+    const password = e.target.value
+    key = password;
+    //calculating strength
+    const rules = [
+    { label: "At least one lowercase letter", passed: hasLowerCase(password) },
+    { label: "At least one uppercase letter", passed: hasUpperCase(password) },
+    { label: "At least one number", passed: hasNumber(password) },
+    { label: "At least one special character", passed: hasSpecialCharacter(password) },
+    { label: "Minimum 8 characters", passed: hasSufficientLength(password) }
+    ];
+
+let strength = 0;
+rules.forEach(rule => {
+if(rule.passed === true){
+    strength++;
+}
+});
+console.log(strength)
+
+//mapping strength
+const strengthMeasure = {
+    1: 'Very Weak',
+    2: 'Weak',
+    3: 'Medium',
+    4: 'Strong',
+    5: 'Very Strong'
+}
+
+//showing strength 
+if(strengthMeasure[strength] === undefined){
+    strengthMessage.innerHTML = ""
+}else{
+strengthMessage.innerHTML = strengthMeasure[strength]
+}
+
+
+//deciding color of strength message
+if(strength <= 2){
+    strengthMessage.style.color = "red"
+}
+else if(strength===3){
+    strengthMessage.style.color = "#92921c"
+}
+else if(strength>3){
+    strengthMessage.style.color = "green"
+}
+const isEmpty = password.length === 0;
+
+//showing rules that does not met the requirements 
+rules.forEach(rule => {
+  if (isEmpty) {
+    rulesContainer.innerHTML += `<p style="color: #777;">${rule.label}</p>`;
+  } else if (!rule.passed) {
+    rulesContainer.innerHTML += `<p style="color: red;">❌ ${rule.label}</p>`;
+  }
+});
+
+})
+
+function hasUpperCase(str){
+    for (const char of str) {
+    //check if char is in uppercase
+    if(char>='A' && char<='Z'){
+
+        return true;
+    }
+}
+return false
+}
+
+function hasLowerCase(str){
+    for (const char of str) {
+    //check if char is in uppercase
+    if(char>='a' && char<='z'){
+        return true;
+    }
+}
+return false
+}
+
+function hasNumber(str){
+    for (const char of str) {
+    //check if char is in uppercase
+    if(char >= '0' && char <= '9'){
+
+        return true;
+    }
+}
+return false
+}
+
+function hasSpecialCharacter(str){
+    for (const char of str) {
+        const isLower = char>='a' && char<='z'
+        const isUpper = char>='A' && char<='Z'
+        const isNumber = char>='0' && char <='9'
+        if(!isLower && !isUpper && !isNumber){
+            return true
+    }
+    }
+    return false
+}
+
+function hasSufficientLength(str){
+    if(str.length >= 8){
+        return true
+    }
+    return false
+}
+
+
+//-----------------------------------------------------------------------
+
+
+//confirm password -
+const confirmPassword= document.querySelector('#confirmPassword')
+const confirmMessage = document.querySelector('#confirmMessage')
+
+confirmPassword.addEventListener('input',(e) => {
+    const confirmValue = confirmPassword.value;
+    const passwordValue = password.value;
+    if (confirmValue === '') {
+    confirmMessage.innerHTML = '';
+    return;
+  }
+    if (passwordValue === '') {
+    confirmMessage.innerHTML = 'Enter password first';
+    confirmMessage.style.color = 'red';
+    return;
+  }
+  if (confirmValue === passwordValue) {
+    confirmMessage.innerHTML = 'Password confirmed';
+    confirmMessage.style.color = 'green';
+  } else {
+    confirmMessage.innerHTML = 'Passwords do not match';
+    confirmMessage.style.color = 'red';
+  }
+});
