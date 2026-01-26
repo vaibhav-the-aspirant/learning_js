@@ -48,6 +48,7 @@ username.addEventListener('input',(e)=>{
 
     //update username validation status
     isUsernameValidated = !space && !special && !length;
+    updateSubmitState();
 
 })
 //username functions
@@ -86,7 +87,7 @@ const email = document.querySelector('#email')
 const emailAnnotation = document.querySelector('#emailAnnotation')
 const emailDot= document.querySelector('#emailDot')
 const emailOrder = document.querySelector('#emailOrder')
-
+let isEmailValidated = false
 
 //email ka event listener 
 email.addEventListener('input',(e)=>{
@@ -121,6 +122,10 @@ email.addEventListener('input',(e)=>{
     }else {
         emailOrder.innerHTML = "'@' must come before '.' "
     }
+
+    isEmailValidated = Annotation && Dot && order 
+    updateSubmitState();
+
 })
 
 
@@ -147,12 +152,14 @@ const strengthMessage = document.querySelector('#result')
 const formBody = document.querySelector('.form')
 const rulesContainer = document.querySelector('#rules');
 const pass = document.querySelector('#password')
-let key ='';
+let isPasswordValidated = false
+
 
 pass.addEventListener('input', (e)=>{
+    isConfirmValidated = false;
+    confirmMessage.innerHTML = '';
     rulesContainer.innerHTML = "";
     const password = e.target.value
-    key = password;
     //calculating strength
     const rules = [
     { label: "At least one lowercase letter", passed: hasLowerCase(password) },
@@ -207,6 +214,9 @@ rules.forEach(rule => {
     rulesContainer.innerHTML += `<p style="color: red;">❌ ${rule.label}</p>`;
   }
 });
+
+isPasswordValidated = hasUpperCase(password) && hasLowerCase(password) && hasNumber(password) && hasSpecialCharacter(password) && hasSufficientLength(password)
+updateSubmitState();
 
 })
 
@@ -268,10 +278,11 @@ function hasSufficientLength(str){
 //confirm password -
 const confirmPassword= document.querySelector('#confirmPassword')
 const confirmMessage = document.querySelector('#confirmMessage')
+let isConfirmValidated = false
 
 confirmPassword.addEventListener('input',(e) => {
     const confirmValue = confirmPassword.value;
-    const passwordValue = password.value;
+    const passwordValue = pass.value;
     if (confirmValue === '') {
     confirmMessage.innerHTML = '';
     return;
@@ -284,8 +295,30 @@ confirmPassword.addEventListener('input',(e) => {
   if (confirmValue === passwordValue) {
     confirmMessage.innerHTML = 'Password confirmed';
     confirmMessage.style.color = 'green';
+    isConfirmValidated = true;
   } else {
     confirmMessage.innerHTML = 'Passwords do not match';
     confirmMessage.style.color = 'red';
+    isConfirmValidated = false;
   }
+  updateSubmitState();
+
 });
+
+//-----------------------------------------------------------------------------
+
+
+//submit button 
+
+const submitBtn = document.querySelector('button');
+
+
+
+function updateSubmitState() {
+  submitBtn.disabled = !(
+    isUsernameValidated &&
+    isEmailValidated &&
+    isPasswordValidated &&
+    isConfirmValidated
+  );
+}

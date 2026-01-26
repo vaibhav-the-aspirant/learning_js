@@ -55,6 +55,10 @@ button {
 button:hover {
   background-color: #0062cc;
 }
+button:disabled {
+  background-color: #999; /* grey */
+  cursor: not-allowed;
+}
 
 p{
     margin: 4px 0 12px 0;
